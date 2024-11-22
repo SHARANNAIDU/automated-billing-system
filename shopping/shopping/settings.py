@@ -129,6 +129,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/product')
 AUTH_USER_MODEL="customer.CustomUser"
 
 # Twilio configurations
-TWILIO_ACCOUNT_SID = 'AC5f7b174cf32c200c4f2c788303a80ced'
-TWILIO_AUTH_TOKEN = '0f978b2be8c5a1c444ec66c5ac80f159'
-TWILIO_PHONE_NUMBER = '+17622460658'
