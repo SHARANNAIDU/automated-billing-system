@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Payment Confirmation {% endblock title %}
+{% block maincontent %}
+<div class="container-fluid mt-2">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box-element">
+                <h2>Waiting for payment confirmation...</h2>
+                <p>Please wait for 30-40 seconds while we process your payment.</p>
+                <div class="loading-animation">
+                    <img src="{% static 'images/loading.gif' %}" alt="Loading...">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    setTimeout(function() {
+        window.location.href = "{% url 'invoice' %}";
+    }, 30000); // 30 seconds
+</script>
+{% endblock maincontent %}

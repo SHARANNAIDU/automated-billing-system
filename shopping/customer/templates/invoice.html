@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout & Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            overflow: auto;
+        }
+        .container {
+            width: 350px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .container h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .container p {
+            margin: 5px 0;
+        }
+        .container hr {
+            border: none;
+            border-top: 1px dashed #ccc;
+            margin: 10px 0;
+        }
+        .container table {
+            width: 100%;
+            margin-bottom: 10px;
+            border-collapse: collapse;
+        }
+        .container table th, .container table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .container table th {
+            background-color: #f2f2f2;
+        }
+        .container .text-center {
+            margin-top: 20px;
+        }
+        .btn-print {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .left-align {
+            text-align: left;
+        }
+        .barcode img {
+            width: 200px;
+            height: auto;
+        }
+        @media print {
+            @page {
+                size: auto;
+                margin: 0;
+            }
+            body * {
+                visibility: hidden;
+            }
+            .container, .container * {
+                visibility: visible;
+            }
+            .container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+                margin: 0;
+            }
+            .btn-print {
+                display: none;
+            }
+        }
+        #qr-code {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% load static %}
+    <div class="container">
+        <h2>TVS</h2>
+        <div>
+            <p>13th Cross, Malleshwaram</p>
+            <p>Tel: 080-12938281</p>
+            <p>P.O BOX. 560092 Bangalore</p>
+            <p>Receipt code: IMS31289AS</p>
+        </div>
+        <div class="barcode">
+            <img src="{% static 'images/barcode.jpg' %}" alt="Barcode">
+        </div>
+        <hr>
+        <div class="left-align">
+            <p><strong>Order ID:</strong> {{ invoice.order.id }}</p>
+            <p><strong>Date:</strong> {{ invoice.created_at }}</p>
+        </div>
+        <hr>
+        <h3>Invoice Items:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in invoice.invoice_items %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>Rs{{ item.total_cost }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <p><strong>Total Amount:</strong> Rs{{ invoice.total_amount }}</p>
+        <div class="text-center">
+            <p><strong>Customer Name:</strong> {{ invoice.customer }}</p>
+            <a class="btn-print" href="javascript:window.print()">Print</a>
+        </div>
+        <hr>
+        <h3>Order successful</h3>
+        <h5>Show this QR to the Guard on your way out.</h5>
+        <h6>Thank you!</h6>
+        <input type="hidden" value="{{ invoice.order.id }}" id="qr-data">
+        <div id="qr-code"></div>
+    </div>
+
+    <script src="{% static 'js/qrcode.min.js' %}"></script>
+    <script>
+        var qrdata = document.getElementById('qr-data').value;
+        var qrcode = new QRCode(document.getElementById('qr-code'));
+        qrcode.makeCode(qrdata);
+    </script>
+</body>
+</html>
